@@ -260,6 +260,10 @@ export default function BusMap({ page, isDark, activeRoute, flyStop, activeStopI
     /* ── Popup close listener — deselect stop when popup is dismissed by user ── */
     const onPopupCloseEvt = () => {
       if (!suppressPopupClose.current) {
+        // 1. This updates App.tsx state via your prop to clear activeStopId
+        onPopupClose(); 
+        
+        // 2. Keep this if other components are listening for it globally
         window.dispatchEvent(new CustomEvent('bs:popupclose'));
       }
     };

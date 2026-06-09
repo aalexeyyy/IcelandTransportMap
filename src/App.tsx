@@ -79,26 +79,37 @@ export default function App() {
       const route = getRouteById(routeId, page);
       if (route) { setActiveRoute(route); setSideOpen(true); }
     };
+    /* Deselect active stop when popup is closed via X button */
+    const onPopupClose = () => {
+      setActiveStop(null);
+    };
     window.addEventListener('bs:start', onStart);
     window.addEventListener('bs:end',   onEnd);
     window.addEventListener('bs:route', onRoute);
+    window.addEventListener('bs:popupclose', onPopupClose);
     return () => {
       window.removeEventListener('bs:start', onStart);
       window.removeEventListener('bs:end',   onEnd);
       window.removeEventListener('bs:route', onRoute);
+      window.removeEventListener('bs:popupclose', onPopupClose);
     };
   }, [page]);
 
   /* ── fly helper ── */
   const flyTo = useCallback((stop: BusStop) => {
-    
     setFlyStop(prev => ({ stop, key: (prev?.key ?? 0) + 1 }));
+    setActiveStop(stop);
   }, []);
 
   /* ── stop pin click (sidebar highlight only, sidebar stays as-is) ── */
   const handleStopOpen = useCallback((stop: BusStop) => {
     setActiveStop(stop);
     // intentionally NOT calling setSideOpen(true) — let user open sidebar themselves
+  }, []);
+
+  /* ── popup close: deselect active stop ── */
+  const handlePopupClose = useCallback(() => {
+    setActiveStop(null);
   }, []);
 
   const bg = isDark ? '#0d1117' : '#f0efe9';
@@ -118,6 +129,7 @@ export default function App() {
           startStop={startStop}
           endStop={endStop}
           onStopOpen={handleStopOpen}
+          onPopupClose={handlePopupClose}
         />
       </div>
 
