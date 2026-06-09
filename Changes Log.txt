@@ -1,0 +1,1 @@
+Added outline style for countryside routes and changed colors(need to check), also changed 92 from city to country route and fixed color of routes inside the pop up
